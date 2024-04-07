@@ -2,6 +2,7 @@ package com.luisbicho.dscatalog.entities;
 
 import jakarta.persistence.*;
 
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -15,6 +16,8 @@ public class Product {
     private Long id;
     private String name;
     private Double price;
+    @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
+    private Instant date;
     @Column(columnDefinition = "text")
     private String description;
     private String imgUrl;
@@ -77,6 +80,16 @@ public class Product {
     public Set<Category> getCategories() {
         return categories;
     }
+
+    public Instant getDate() {
+        return date;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        date = Instant.now();
+    }
+
 
     @Override
     public boolean equals(Object o) {
