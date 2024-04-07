@@ -3,6 +3,7 @@ package com.luisbicho.dscatalog.services;
 import com.luisbicho.dscatalog.dto.CategoryDTO;
 import com.luisbicho.dscatalog.entities.Category;
 import com.luisbicho.dscatalog.repositories.CategoryRepository;
+import com.luisbicho.dscatalog.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,7 +27,7 @@ public class CategoryService {
     @Transactional(readOnly = true)
     public CategoryDTO findById(Long id) {
         Optional<Category> result = repository.findById(id);
-        return new CategoryDTO(result.get());
+        return new CategoryDTO(result.orElseThrow(() -> new ResourceNotFoundException("Category not found")));
     }
 
 }
