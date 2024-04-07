@@ -15,6 +15,7 @@ public class Product {
     private Long id;
     private String name;
     private Double price;
+    @Column(columnDefinition = "text")
     private String description;
     private String imgUrl;
 
