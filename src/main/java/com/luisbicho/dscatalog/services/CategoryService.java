@@ -3,11 +3,14 @@ package com.luisbicho.dscatalog.services;
 import com.luisbicho.dscatalog.dto.CategoryDTO;
 import com.luisbicho.dscatalog.entities.Category;
 import com.luisbicho.dscatalog.repositories.CategoryRepository;
+import com.luisbicho.dscatalog.services.exceptions.DatabaseException;
 import com.luisbicho.dscatalog.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
@@ -44,6 +47,18 @@ public class CategoryService {
         entity.setName(dto.getName());
         repository.save(entity);
         return new CategoryDTO(entity);
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public void delete(Long id) {
+        if (!repository.existsById(id)) {
+            throw new ResourceNotFoundException("Category not found");
+        }
+        try {
+            repository.deleteById(id);
+        } catch (DataIntegrityViolationException e) {
+            throw new DatabaseException("Integrity violation");
+        }
     }
 
 }
