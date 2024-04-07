@@ -30,4 +30,20 @@ public class CategoryService {
         return new CategoryDTO(result.orElseThrow(() -> new ResourceNotFoundException("Category not found")));
     }
 
+    @Transactional
+    public CategoryDTO insert(CategoryDTO dto) {
+        Category entity = new Category();
+        entity.setName(dto.getName());
+        entity = repository.save(entity);
+        return new CategoryDTO(entity);
+    }
+
+    @Transactional
+    public CategoryDTO update(Long id, CategoryDTO dto) {
+        Category entity = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Category not found"));
+        entity.setName(dto.getName());
+        repository.save(entity);
+        return new CategoryDTO(entity);
+    }
+
 }
