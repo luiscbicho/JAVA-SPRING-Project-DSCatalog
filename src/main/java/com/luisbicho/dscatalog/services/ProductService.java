@@ -7,6 +7,7 @@ import com.luisbicho.dscatalog.entities.Product;
 import com.luisbicho.dscatalog.repositories.CategoryRepository;
 import com.luisbicho.dscatalog.repositories.ProductRepository;
 import com.luisbicho.dscatalog.services.exceptions.ResourceNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -47,10 +48,14 @@ public class ProductService {
 
     @Transactional
     public ProductWithCategoryDTO update(Long id, ProductWithCategoryDTO dto) {
-        Product product = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product not found"));
-        update(product, dto);
-        product = repository.save(product);
-        return new ProductWithCategoryDTO(product);
+        try {
+            Product product = repository.getReferenceById(id);
+            update(product, dto);
+            product = repository.save(product);
+            return new ProductWithCategoryDTO(product);
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException("Product not found");
+        }
     }
 
     @Transactional(propagation = Propagation.SUPPORTS)
@@ -65,11 +70,11 @@ public class ProductService {
         product.setName(dto.getName());
         product.setDescription(dto.getDescription());
         product.setPrice(dto.getPrice());
+        product.setImgUrl(dto.getImgUrl());
         product.getCategories().clear();
         for (CategoryDTO x : dto.getCategories()) {
-            Category category = categoryRepository.findById(x.getId()).orElseThrow(() -> new ResourceNotFoundException("Category not found"));
+            Category category = categoryRepository.getReferenceById(x.getId());
             product.getCategories().add(category);
         }
     }
-
 }
