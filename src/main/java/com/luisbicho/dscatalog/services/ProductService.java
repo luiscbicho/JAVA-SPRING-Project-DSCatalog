@@ -6,9 +6,11 @@ import com.luisbicho.dscatalog.entities.Category;
 import com.luisbicho.dscatalog.entities.Product;
 import com.luisbicho.dscatalog.repositories.CategoryRepository;
 import com.luisbicho.dscatalog.repositories.ProductRepository;
+import com.luisbicho.dscatalog.services.exceptions.DatabaseException;
 import com.luisbicho.dscatalog.services.exceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -63,7 +65,11 @@ public class ProductService {
         if (!repository.existsById(id)) {
             throw new ResourceNotFoundException("Product not found");
         }
-        repository.deleteById(id);
+        try {
+            repository.deleteById(id);
+        } catch (DataIntegrityViolationException e) {
+            throw new DatabaseException("Integrity violation");
+        }
     }
 
     private void update(Product product, ProductWithCategoryDTO dto) {
