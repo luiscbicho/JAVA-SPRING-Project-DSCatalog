@@ -3,7 +3,6 @@ package com.luisbicho.dscatalog.entities;
 import jakarta.persistence.*;
 
 import java.util.Objects;
-import java.util.Set;
 
 @Entity
 @Table(name = "tb_role")
@@ -14,8 +13,13 @@ public class Role {
     private Long id;
     private String authority;
 
-    @ManyToMany(mappedBy = "roles")
-    private Set<User> users;
+    public Role() {
+    }
+
+    public Role(Long id, String authority) {
+        this.id = id;
+        this.authority = authority;
+    }
 
     public Long getId() {
         return id;
@@ -31,10 +35,6 @@ public class Role {
 
     public void setAuthority(String authority) {
         this.authority = authority;
-    }
-
-    public Set<User> getUsers() {
-        return users;
     }
 
     @Override
