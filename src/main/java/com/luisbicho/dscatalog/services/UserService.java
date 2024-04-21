@@ -6,6 +6,7 @@ import com.luisbicho.dscatalog.dto.UserInsertDTO;
 import com.luisbicho.dscatalog.dto.UserUpdateDTO;
 import com.luisbicho.dscatalog.entities.Role;
 import com.luisbicho.dscatalog.entities.User;
+import com.luisbicho.dscatalog.projections.UserDetailsProjection;
 import com.luisbicho.dscatalog.repositories.RoleRepository;
 import com.luisbicho.dscatalog.repositories.UserRepository;
 import com.luisbicho.dscatalog.services.exceptions.DatabaseException;
@@ -15,18 +16,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
 
     @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private UserRepository repository;
@@ -91,5 +96,20 @@ public class UserService {
             Role role = roleRepository.getReferenceById(x.getId());
             user.getRoles().add(role);
         }
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        List<UserDetailsProjection> result = repository.searchUserAndRolesByEmail(username);
+        if (result.size() == 0) {
+            throw new UsernameNotFoundException("User not found");
+        }
+        User user = new User();
+        user.setEmail(username);
+        user.setPassword(result.get(0).getPassword());
+        for (UserDetailsProjection x : result) {
+            user.addRole(new Role(x.getRoleId(), x.getAuthority()));
+        }
+        return user;
     }
 }
