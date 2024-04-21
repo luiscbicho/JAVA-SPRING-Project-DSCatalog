@@ -1,6 +1,7 @@
 package com.luisbicho.dscatalog.dto;
 
 import com.luisbicho.dscatalog.entities.User;
+import jakarta.validation.constraints.NotBlank;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -8,6 +9,7 @@ import java.util.Set;
 public class UserDTO {
 
     private Long id;
+    @NotBlank(message = "Required feld")
     private String firstName;
     private String lastName;
     private String email;

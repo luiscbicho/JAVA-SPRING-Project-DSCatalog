@@ -1,12 +1,17 @@
 package com.luisbicho.dscatalog.dto;
 
 import com.luisbicho.dscatalog.entities.Product;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 
 public class ProductDTO {
 
     private Long id;
+    @NotBlank(message = "Required feld")
     private String name;
+    @Positive(message = "Must be positive")
     private Double price;
+    @NotBlank(message = "Required feld")
     private String description;
     private String imgUrl;
 

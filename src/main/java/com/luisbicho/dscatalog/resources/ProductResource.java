@@ -2,6 +2,7 @@ package com.luisbicho.dscatalog.resources;
 
 import com.luisbicho.dscatalog.dto.ProductWithCategoryDTO;
 import com.luisbicho.dscatalog.services.ProductService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,14 +32,14 @@ public class ProductResource {
     }
 
     @PostMapping
-    public ResponseEntity<ProductWithCategoryDTO> insert(@RequestBody ProductWithCategoryDTO dto) {
+    public ResponseEntity<ProductWithCategoryDTO> insert(@Valid @RequestBody ProductWithCategoryDTO dto) {
         dto = service.insert(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId()).toUri();
         return ResponseEntity.created(uri).body(dto);
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<ProductWithCategoryDTO> update(@RequestBody ProductWithCategoryDTO dto, @PathVariable Long id) {
+    public ResponseEntity<ProductWithCategoryDTO> update(@Valid @RequestBody ProductWithCategoryDTO dto, @PathVariable Long id) {
         dto = service.update(id, dto);
         return ResponseEntity.ok().body(dto);
     }

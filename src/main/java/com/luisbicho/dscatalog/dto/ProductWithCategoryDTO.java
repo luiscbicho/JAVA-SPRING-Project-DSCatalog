@@ -2,6 +2,8 @@ package com.luisbicho.dscatalog.dto;
 
 import com.luisbicho.dscatalog.entities.Category;
 import com.luisbicho.dscatalog.entities.Product;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -9,8 +11,11 @@ import java.util.Set;
 public class ProductWithCategoryDTO {
 
     private Long id;
+    @NotBlank(message = "Required feld")
     private String name;
+    @Positive(message = "Must be positive")
     private Double price;
+    @NotBlank(message = "Required feld")
     private String description;
     private String imgUrl;
 
