@@ -34,4 +34,20 @@ public class CustomError {
     public String getPath() {
         return path;
     }
+
+    public void setTimestamp(Instant timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public void setError(String error) {
+        this.error = error;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
 }
