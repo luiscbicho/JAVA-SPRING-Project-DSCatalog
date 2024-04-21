@@ -3,6 +3,7 @@ package com.luisbicho.dscatalog.services;
 import com.luisbicho.dscatalog.dto.RoleDTO;
 import com.luisbicho.dscatalog.dto.UserDTO;
 import com.luisbicho.dscatalog.dto.UserInsertDTO;
+import com.luisbicho.dscatalog.dto.UserUpdateDTO;
 import com.luisbicho.dscatalog.entities.Role;
 import com.luisbicho.dscatalog.entities.User;
 import com.luisbicho.dscatalog.repositories.RoleRepository;
@@ -57,7 +58,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserDTO update(Long id, UserDTO dto) {
+    public UserDTO update(Long id, UserUpdateDTO dto) {
         try {
             User user = repository.getReferenceById(id);
             update(user, dto);
