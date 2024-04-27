@@ -2,10 +2,14 @@ package com.luisbicho.dscatalog.dto;
 
 import com.luisbicho.dscatalog.entities.User;
 import com.luisbicho.dscatalog.services.validation.UserInsertValid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 @UserInsertValid
 public class UserInsertDTO extends UserDTO {
 
+    @NotBlank(message = "Required feld")
+    @Size(min = 8, message = "At least 8 Characters")
     private String password;
 
     public UserInsertDTO() {

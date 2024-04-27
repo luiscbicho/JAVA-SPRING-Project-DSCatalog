@@ -1,6 +1,7 @@
 package com.luisbicho.dscatalog.dto;
 
 import com.luisbicho.dscatalog.entities.User;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
 import java.util.HashSet;
@@ -11,7 +12,9 @@ public class UserDTO {
     private Long id;
     @NotBlank(message = "Required feld")
     private String firstName;
+    @NotBlank(message = "Required feld")
     private String lastName;
+    @Email(message = "Valid Email")
     private String email;
 
     private Set<RoleDTO> roles = new HashSet<>();

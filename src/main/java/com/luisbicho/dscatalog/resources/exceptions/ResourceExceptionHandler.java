@@ -2,6 +2,7 @@ package com.luisbicho.dscatalog.resources.exceptions;
 
 import com.luisbicho.dscatalog.dto.CustomError;
 import com.luisbicho.dscatalog.services.exceptions.DatabaseException;
+import com.luisbicho.dscatalog.services.exceptions.EmailException;
 import com.luisbicho.dscatalog.services.exceptions.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -41,6 +42,13 @@ public class ResourceExceptionHandler {
         for (FieldError fieldError : e.getBindingResult().getFieldErrors()) {
             err.addError(fieldError.getField(), fieldError.getDefaultMessage());
         }
+        return ResponseEntity.status(status).body(err);
+    }
+
+    @ExceptionHandler(EmailException.class)
+    public ResponseEntity<CustomError> email(EmailException e, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        CustomError err = new CustomError(Instant.now(), status.value(), e.getMessage(), request.getRequestURI());
         return ResponseEntity.status(status).body(err);
     }
 
